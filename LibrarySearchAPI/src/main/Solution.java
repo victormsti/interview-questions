@@ -62,102 +62,108 @@ public class Solution {
 
 		String[] search(String word) {
 
-			String[] title = new String[999];
+			String[] title = null;
 			String[] author;
 			String[] description;
-			StringBuilder temp = new StringBuilder();
-			String[] foundTitle = new String[1];
+			String[] foundTitles = null;
 			String strTitle = null;
+
+			// the list if necessary because we can be adding items dynamically
+			// and at the final of the statment pass the itens to the array
+			List<String> list = new ArrayList<>();
+
+			// the author and description have more than one line,
+			// so the boolean flags are necessary to keep looking at these lines
 			boolean isAuthor = false;
 			boolean isDescription = false;
+
+			// if already found in a given title, pass until reach the another title
+			boolean isFound = false;
+
 			for (String currentWord : Library.words) {
 
 				if (currentWord.length() != 0 && currentWord.substring(0, 5).equals("TITLE")) {
+					isFound = false;
 					strTitle = currentWord.substring(7, currentWord.length());
 					title = currentWord.split(" ");
 					for (String eachTitle : title) {
 
 						if (eachTitle.contains(word)) {
-							for (int i = 0; i < title.length; i++) {
-								temp.append(title[i]);
-							}
-							foundTitle[0] = strTitle;
-							return foundTitle;
-
+							list.add(strTitle);
+							isFound = true;
+							break;
 						}
 					}
 				}
 
-				if (currentWord.length() != 0 && currentWord.substring(0, 6).equals("AUTHOR")) {
+				if (currentWord.length() != 0 && currentWord.substring(0, 6).equals("AUTHOR") && !isFound) {
 					isAuthor = true;
 					isDescription = false;
 					author = currentWord.split(" ");
 
 					for (String eachAuthor : author) {
 						if (eachAuthor.contains(word)) {
-							for (int i = 0; i < title.length; i++) {
-								temp.append(title[i]);
-							}
-							foundTitle[0] = strTitle;
-							return foundTitle;
+							list.add(strTitle);
+							isFound = true;
+							break;
 						}
 					}
 				}
 
-				if (currentWord.length() != 0 && currentWord.substring(0, 11).equals("DESCRIPTION")) {
+				if (currentWord.length() != 0 && currentWord.substring(0, 11).equals("DESCRIPTION") && !isFound) {
 					isDescription = true;
 					isAuthor = false;
 					description = currentWord.split(" ");
 					for (String eachDescription : description) {
 						if (eachDescription.contains(word)) {
-							for (int i = 0; i < title.length; i++) {
-								temp.append(title[i]);
-							}
-							foundTitle[0] = strTitle;
-							return foundTitle;
+							list.add(strTitle);
+							isFound = true;
+							break;
 						}
 					}
 				}
-				if (isAuthor) {
+				if (isAuthor && !isFound) {
 					author = currentWord.split(" ");
 
 					for (String eachAuthor : author) {
 						if (eachAuthor.contains(word)) {
-							for (int i = 0; i < title.length; i++) {
-								temp.append(title[i]);
-							}
-							foundTitle[0] = strTitle;
-							return foundTitle;
+							list.add(strTitle);
+							isFound = true;
+							break;
 						}
 					}
 				}
-				if (isDescription) {
+				if (isDescription && !isFound) {
 					description = currentWord.split(" ");
 					for (String eachDescription : description) {
 						if (eachDescription.contains(word)) {
-							for (int i = 0; i < title.length; i++) {
-								temp.append(title[i]);
-							}
-							foundTitle[0] = strTitle;
-							return foundTitle;
+							list.add(strTitle);
+							isFound = true;
+							break;
 						}
 					}
 				}
 			}
-			return foundTitle;
+			if (list.isEmpty()) {
+				return foundTitles;
+			} else {
+				foundTitles = new String[list.size()];
+				for (int i = 0; i < foundTitles.length; i++) {
+					foundTitles[i] = list.get(i);
+				}
+				return foundTitles;
+
+			}
 		}
 
 	}
-	
-	public String doSearch(String word) {
+
+	public String[] doSearch(String word) {
 		Library library = new Library(LIBRARY_DATA);
 
 		String[] title = library.search(word);
-		String result = null;
-		for (String str : title) {
-			result = str;
-		}
-		return result;
+		
+		return title;
 	}
 
 	private static final Scanner scanner = new Scanner(System.in);
@@ -166,10 +172,14 @@ public class Solution {
 
 		Library library = new Library(LIBRARY_DATA);
 
-		String[] title = library.search("actor");
+		String[] title = library.search("and");
 
+		if (title == null) {
+			System.out.println(title);
+		} else {
 			for (String str : title) {
 				System.out.println(str + " ");
 			}
+		}
 	}
 }
