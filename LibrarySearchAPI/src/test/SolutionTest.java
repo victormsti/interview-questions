@@ -43,7 +43,7 @@ class SolutionTest {
 	}
 	
 	@Test
-	void test5() {
+	void test5() { 
 		
 		words = new String[2];
 		words[0] = "Dune";
