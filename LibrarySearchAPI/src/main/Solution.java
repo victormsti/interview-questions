@@ -68,7 +68,7 @@ public class Solution {
 			String[] foundTitles = null;
 			String strTitle = null;
 
-			// the list if necessary because we can be adding items dynamically
+			// the list is necessary because we can be adding items dynamically
 			// and at the final of the statment pass the itens to the array
 			List<String> list = new ArrayList<>();
 
